@@ -55,7 +55,7 @@ function startGame() {
   }
 }
 
-window.requestIdleCallback(() => {
+window.addEventListener("load", () => {
   const dispose = startGame()
-  window.addEventListener("beforeunload", dispose)
-})
+  window.addEventListener("beforeunload", dispose, { once: true })
+}, { once: true })
