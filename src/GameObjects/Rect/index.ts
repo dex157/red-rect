@@ -1,20 +1,6 @@
-export interface Asset {
-  x: number
-  y: number
-}
+import { Animated, Asset, Interactive } from "../../GameInterfaces"
 
-export interface KeyboardInteractable {
-  moveLeft(): void
-  moveRight(): void
-  moveUp(): void
-  moveDown(): void
-}
-
-export interface Tickable {
-  tick(delta: number): void
-}
-
-export class Rect implements KeyboardInteractable, Tickable {
+export class Rect implements Interactive, Animated {
   private state: RectState
   private movingVector: Vector2d
   private speed = 4
@@ -44,12 +30,13 @@ export class Rect implements KeyboardInteractable, Tickable {
   }
 
   public tick(delta: number) {
-    this.x =
-      (this.x + this.movingVector.x * this.speed * delta) % this.fieldWidth
-    this.y =
-      (this.y + this.movingVector.y * this.speed * delta) % this.fieldHeight
-    if (this.y < 0) this.y += this.fieldHeight
+    this.x += this.movingVector.x * this.speed * delta
+    this.x %= this.fieldWidth
     if (this.x < 0) this.x += this.fieldWidth
+
+    this.y += this.movingVector.y * this.speed * delta
+    this.y %= this.fieldHeight
+    if (this.y < 0) this.y += this.fieldHeight
 
     this.asset.x = this.x
     this.asset.y = this.y

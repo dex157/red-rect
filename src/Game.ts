@@ -1,12 +1,13 @@
-import { KeyboardInteractable, Rect, Tickable } from "./GameObjects/Rect"
+import { Animated, Interactive } from "./GameInterfaces"
+import { Rect } from "./GameObjects/Rect"
 import { Direction, KeyboardController } from "./KeyboardController"
 import { Entity, Render } from "./Render"
 
 export class Game implements Disposable {
   private renderModule: Render
   private keyboardController: KeyboardController
-  private tickableObjects: Tickable[] = []
-  private keyboardInteractableObjects: KeyboardInteractable[] = []
+  private animatedObjects: Animated[] = []
+  private interactiveObjects: Interactive[] = []
 
   constructor(width: number, height: number) {
     this.renderModule = new Render(window, width, height)
@@ -18,12 +19,12 @@ export class Game implements Disposable {
     const graphicEntity = this.renderModule.createEntity(Entity.RedRect)
     const rect = new Rect(0, 0, width, height, graphicEntity)
 
-    this.tickableObjects.push(rect)
-    this.keyboardInteractableObjects.push(rect)
+    this.animatedObjects.push(rect)
+    this.interactiveObjects.push(rect)
   }
 
   private handleInput = (direction: Direction) => {
-    this.keyboardInteractableObjects.forEach((object) => {
+    this.interactiveObjects.forEach((object) => {
       switch (direction) {
         case Direction.Left:
           object.moveLeft()
@@ -42,7 +43,7 @@ export class Game implements Disposable {
   }
 
   private handleTick = (delta: number) => {
-    this.tickableObjects.forEach((object) => object.tick(delta))
+    this.animatedObjects.forEach((object) => object.tick(delta))
   }
 
   public [Symbol.dispose]() {

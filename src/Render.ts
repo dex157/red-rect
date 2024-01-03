@@ -6,14 +6,14 @@ export enum Entity {
 
 export class Render implements Disposable {
   private app: PIXI.Application<HTMLCanvasElement>
-  private tickListeners: ((delta: number) => void)[]
+  private subscribers: ((delta: number) => void)[]
 
   constructor(
     private window: Window,
     private width: number,
     private height: number,
   ) {
-    this.tickListeners = []
+    this.subscribers = []
     this.app = new PIXI.Application({
       width: width,
       height: height,
@@ -23,34 +23,35 @@ export class Render implements Disposable {
     window.document.body.appendChild(this.app.view)
 
     this.app.ticker.add((delta) => {
-      this.tickListeners.forEach((ticListener) => ticListener(delta))
+      this.subscribers.forEach((subscriber) => subscriber(delta))
     })
   }
 
   createEntity(name: Entity): PIXI.DisplayObject {
     switch (name) {
-      case Entity.RedRect: {
+      case Entity.RedRect:
         const redRect = new PIXI.Graphics()
+        this.app.stage.addChild(redRect)
+
         redRect.beginFill(0xff0000)
         redRect.drawRect(0, 0, 100, 100)
         redRect.drawRect(-this.width, 0, 100, 100)
         redRect.drawRect(0, -this.height, 100, 100)
         redRect.drawRect(-this.width, -this.height, 100, 100)
-        this.app.stage.addChild(redRect)
+
         return redRect
-      }
-      default: {
+
+      default:
         const neverValue: never = name
         throw new Error(`Never value is assigned ${neverValue}`)
-      }
     }
   }
 
   onTick(callback: (delta: number) => void) {
-    this.tickListeners.push(callback)
+    this.subscribers.push(callback)
 
     return () => {
-      this.tickListeners = this.tickListeners.filter((cb) => cb !== callback)
+      this.subscribers = this.subscribers.filter((cb) => cb !== callback)
     }
   }
 
