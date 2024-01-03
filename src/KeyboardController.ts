@@ -1,11 +1,15 @@
-export enum Direction {
-  Left,
-  Right,
-  Up,
-  Down,
-}
+type Subscriber = (key: GameKey) => void
 
-type Subscriber = (direction: Direction) => void
+export const gameKeys = [
+  "ArrowUp",
+  "ArrowDown",
+  "ArrowLeft",
+  "ArrowRight",
+] as const
+export type GameKey = (typeof gameKeys)[number]
+
+const isGameKey = (key: string): key is GameKey =>
+  (gameKeys as ReadonlyArray<string>).includes(key)
 
 export class KeyboardController implements Disposable {
   private subscribers: Subscriber[]
@@ -16,10 +20,7 @@ export class KeyboardController implements Disposable {
   }
 
   private handleKeyPress = (event: KeyboardEvent) => {
-    if (event.key === "ArrowUp") this.emitKeyPress(Direction.Up)
-    else if (event.key === "ArrowDown") this.emitKeyPress(Direction.Down)
-    else if (event.key === "ArrowLeft") this.emitKeyPress(Direction.Left)
-    else if (event.key === "ArrowRight") this.emitKeyPress(Direction.Right)
+    if (isGameKey(event.key)) this.emitKeyPress(event.key as GameKey)
   }
 
   public subscribe(sb: Subscriber): () => void {
@@ -29,8 +30,8 @@ export class KeyboardController implements Disposable {
     }
   }
 
-  private emitKeyPress(direction: Direction) {
-    this.subscribers.forEach((listener) => listener(direction))
+  private emitKeyPress(key: GameKey) {
+    this.subscribers.forEach((listener) => listener(key))
   }
 
   public [Symbol.dispose]() {

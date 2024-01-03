@@ -1,6 +1,6 @@
 import { Animated, Interactive } from "./GameInterfaces"
 import { Rect } from "./GameObjects/Rect"
-import { Direction, KeyboardController } from "./KeyboardController"
+import { GameKey, KeyboardController } from "./KeyboardController"
 import { Entity, Render } from "./Render"
 
 export class Game implements Disposable {
@@ -9,7 +9,7 @@ export class Game implements Disposable {
   private animatedObjects: Animated[] = []
   private interactiveObjects: Interactive[] = []
 
-  constructor(width: number, height: number) {
+  public constructor(width: number, height: number) {
     this.renderModule = new Render(window, width, height)
     this.renderModule.onTick(this.handleTick)
 
@@ -23,19 +23,19 @@ export class Game implements Disposable {
     this.interactiveObjects.push(rect)
   }
 
-  private handleInput = (direction: Direction) => {
+  private handleInput = (key: GameKey) => {
     this.interactiveObjects.forEach((object) => {
-      switch (direction) {
-        case Direction.Left:
+      switch (key) {
+        case "ArrowLeft":
           object.moveLeft()
           break
-        case Direction.Right:
+        case "ArrowRight":
           object.moveRight()
           break
-        case Direction.Up:
+        case "ArrowUp":
           object.moveUp()
           break
-        case Direction.Down:
+        case "ArrowDown":
           object.moveDown()
           break
       }

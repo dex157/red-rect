@@ -1,5 +1,5 @@
 import { expect, it, describe, vi, afterEach } from "vitest"
-import { KeyboardController, Direction } from "./KeyboardController"
+import { KeyboardController } from "./KeyboardController"
 
 describe("KeyboardControllerSingleton", () => {
   const addEventListenerMock = vi.fn()
@@ -27,22 +27,22 @@ describe("KeyboardControllerSingleton", () => {
 
     addEventListenerMock.mock.calls[0][1]({ key: "ArrowUp" })
 
-    expect(subscriber).toBeCalledWith(Direction.Up)
+    expect(subscriber).toBeCalledWith("ArrowUp")
   })
 
   it.each([
-    ["ArrowUp", Direction.Up],
-    ["ArrowDown", Direction.Down],
-    ["ArrowLeft", Direction.Left],
-    ["ArrowRight", Direction.Right],
+    ["ArrowUp"],
+    ["ArrowDown"],
+    ["ArrowLeft"],
+    ["ArrowRight"],
   ])(
     "event %s call listener with proper Direction",
-    (keyName, expectedDirection) => {
+    (keyName) => {
       using kc = new KeyboardController(windowMock)
       const subscriber = vi.fn()
       kc.subscribe(subscriber)
       addEventListenerMock.mock.calls[0][1]({ key: keyName })
-      expect(subscriber).toBeCalledWith(expectedDirection)
+      expect(subscriber).toBeCalledWith(keyName)
     },
   )
 

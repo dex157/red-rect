@@ -9,7 +9,7 @@ export interface Animated {
   tick(delta: number): void
 }
 
-export interface Asset {
+export interface GameDisplayObject {
   x: number
   y: number
 }

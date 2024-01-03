@@ -8,7 +8,7 @@ export class Render implements Disposable {
   private app: PIXI.Application<HTMLCanvasElement>
   private subscribers: ((delta: number) => void)[]
 
-  constructor(
+  public constructor(
     private window: Window,
     private width: number,
     private height: number,
@@ -27,7 +27,7 @@ export class Render implements Disposable {
     })
   }
 
-  createEntity(name: Entity): PIXI.DisplayObject {
+  public createEntity(name: Entity): PIXI.DisplayObject {
     switch (name) {
       case Entity.RedRect:
         const redRect = new PIXI.Graphics()
@@ -47,7 +47,7 @@ export class Render implements Disposable {
     }
   }
 
-  onTick(callback: (delta: number) => void) {
+  public onTick(callback: (delta: number) => void) {
     this.subscribers.push(callback)
 
     return () => {

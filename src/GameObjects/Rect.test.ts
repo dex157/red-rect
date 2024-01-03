@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest"
-import { Rect } from "./index"
+import { Rect } from "./Rect"
+import { GameDisplayObject } from "../GameInterfaces"
 
 describe("Rect", () => {
   it("shouldn't move in idle state", () => {
-    const mockDisplayObject = { x: 0, y: 0 }
+    const mockDisplayObject: GameDisplayObject = { x: 0, y: 0 }
     const rect = new Rect(0, 0, 100, 100, mockDisplayObject)
 
     rect.tick(100)
@@ -12,7 +13,7 @@ describe("Rect", () => {
   })
 
   it("should move to the right after call moveRight", () => {
-    const mockDisplayObject = { x: 0, y: 0 }
+    const mockDisplayObject: GameDisplayObject = { x: 0, y: 0 }
     const rect = new Rect(0, 0, 100, 100, mockDisplayObject)
 
     rect.moveRight()
@@ -22,7 +23,7 @@ describe("Rect", () => {
   })
 
   it("should be idle if moveRight was called after moveLeft", () => {
-    const mockDisplayObject = { x: 0, y: 0 }
+    const mockDisplayObject: GameDisplayObject = { x: 0, y: 0 }
     const rect = new Rect(0, 0, 100, 100, mockDisplayObject)
 
     rect.moveRight()
@@ -33,7 +34,7 @@ describe("Rect", () => {
   })
 
   it("should move to the start position after cross opposite border", () => {
-    const mockDisplayObject = { x: 0, y: 0 }
+    const mockDisplayObject: GameDisplayObject = { x: 0, y: 0 }
     const rect = new Rect(0, 0, 100, 100, mockDisplayObject)
 
     rect.moveRight()

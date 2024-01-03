@@ -1,4 +1,4 @@
-import { Animated, Asset, Interactive } from "../../GameInterfaces"
+import { Animated, GameDisplayObject, Interactive } from "../GameInterfaces"
 
 export class Rect implements Interactive, Animated {
   private state: RectState
@@ -10,7 +10,7 @@ export class Rect implements Interactive, Animated {
     private y: number,
     private fieldWidth: number,
     private fieldHeight: number,
-    private asset: Asset,
+    private asset: GameDisplayObject,
   ) {
     this.movingVector = { x: 0, y: 0 }
     this.state = new IdleState(this.changeState, this.movingVector)
@@ -48,26 +48,26 @@ export class Rect implements Interactive, Animated {
 }
 
 abstract class RectState {
-  constructor(
+  public constructor(
     protected changeState: (state: RectState) => void,
     protected movingVector: Vector2d,
   ) {}
-  moveLeft(): void {
+  public moveLeft(): void {
     this.movingVector.x = -1
     this.movingVector.y = 0
     this.changeState(new MovingLeftState(this.changeState, this.movingVector))
   }
-  moveRight(): void {
+  public moveRight(): void {
     this.movingVector.x = 1
     this.movingVector.y = 0
     this.changeState(new MovingRightState(this.changeState, this.movingVector))
   }
-  moveUp(): void {
+  public moveUp(): void {
     this.movingVector.x = 0
     this.movingVector.y = -1
     this.changeState(new MovingUpState(this.changeState, this.movingVector))
   }
-  moveDown(): void {
+  public moveDown(): void {
     this.movingVector.x = 0
     this.movingVector.y = 1
     this.changeState(new MovingDownState(this.changeState, this.movingVector))
