@@ -1,5 +1,8 @@
 export enum Direction {
-  Left, Right, Up, Down
+  Left,
+  Right,
+  Up,
+  Down,
 }
 
 type Subscriber = (direction: Direction) => void
@@ -9,7 +12,7 @@ export class KeyboardController implements Disposable {
 
   public constructor(private window: Window) {
     this.listeners = []
-    this.window.addEventListener("keypress", this.handleKeyPress)
+    this.window.addEventListener("keydown", this.handleKeyPress)
   }
 
   private handleKeyPress = (event: KeyboardEvent) => {
@@ -22,15 +25,15 @@ export class KeyboardController implements Disposable {
   public subscribe(sb: Subscriber): () => void {
     this.listeners.push(sb)
     return () => {
-      this.listeners = this.listeners.filter(_sb => _sb != sb)
+      this.listeners = this.listeners.filter((_sb) => _sb != sb)
     }
   }
 
-  private fireEvent (direction: Direction) {
-    this.listeners.forEach(listener => listener(direction))
+  private fireEvent(direction: Direction) {
+    this.listeners.forEach((listener) => listener(direction))
   }
 
   public [Symbol.dispose]() {
-    this.window.removeEventListener("keypress", this.handleKeyPress)
+    this.window.removeEventListener("keydown", this.handleKeyPress)
   }
 }

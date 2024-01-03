@@ -1,6 +1,5 @@
-import { expect, it, describe, vi, afterEach } from 'vitest'
+import { expect, it, describe, vi, afterEach } from "vitest"
 import { KeyboardController, Direction } from "./KeyboardController"
-
 
 describe("KeyboardControllerSingleton", () => {
   const addEventListenerMock = vi.fn()
@@ -15,9 +14,9 @@ describe("KeyboardControllerSingleton", () => {
     vi.resetAllMocks()
   })
 
-  it("listen window keypress after initialize", () => {
+  it("listen window keydown after initialize", () => {
     new KeyboardController(windowMock)
-    expect(addEventListenerMock).toBeCalledWith("keypress", expect.anything())
+    expect(addEventListenerMock).toBeCalledWith("keydown", expect.anything())
   })
 
   it("call subscribe function after fire event", () => {
@@ -35,14 +34,17 @@ describe("KeyboardControllerSingleton", () => {
     ["ArrowUp", Direction.Up],
     ["ArrowDown", Direction.Down],
     ["ArrowLeft", Direction.Left],
-    ["ArrowRight", Direction.Right]
-  ])("event %s call listener with proper Direction", (keyName, expectedDirection) => {
-    using kc = new KeyboardController(windowMock)
-    const subscriber = vi.fn()
-    kc.subscribe(subscriber)
-    addEventListenerMock.mock.calls[0][1]({ key: keyName })
-    expect(subscriber).toBeCalledWith(expectedDirection)
-  })
+    ["ArrowRight", Direction.Right],
+  ])(
+    "event %s call listener with proper Direction",
+    (keyName, expectedDirection) => {
+      using kc = new KeyboardController(windowMock)
+      const subscriber = vi.fn()
+      kc.subscribe(subscriber)
+      addEventListenerMock.mock.calls[0][1]({ key: keyName })
+      expect(subscriber).toBeCalledWith(expectedDirection)
+    },
+  )
 
   it("doesn't call subscriber after unsubscribe", () => {
     using kc = new KeyboardController(windowMock)
@@ -54,7 +56,7 @@ describe("KeyboardControllerSingleton", () => {
     addEventListenerMock.mock.calls[0][1]({ key: "ArrowUp" })
     expect(subscriber).not.toBeCalled()
   })
-  
+
   it("dispose eventListeners", () => {
     function run() {
       using kc = new KeyboardController(windowMock)
@@ -66,4 +68,3 @@ describe("KeyboardControllerSingleton", () => {
     expect(removeEventListenerMock).toBeCalledTimes(1)
   })
 })
-
